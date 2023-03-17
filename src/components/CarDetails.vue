@@ -43,17 +43,49 @@
   </template>
   
   <script>
-  // ... The rest of your script ...
+  import axios from "axios";
+  
+  export default {
+    data() {
+      return {
+        car: {},
+        valid: true,
+        rental: {
+          startDate: null,
+          endDate: null,
+        },
+        requiredRule: (value) => !!value || "This field is required.",
+      };
+    },
+    async created() {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/cars/${this.$route.params.id}`
+        );
+        this.car = response.data.car;
+      } catch (error) {
+        console.error("Error fetching car data:", error);
+      }
+    },
+    methods: {
+      submitForm() {
+        if (this.valid) {
+          console.log("Submitting rental form");
+          console.log("Rental data to be sent:", this.rental);
+          // You can send a request to the backend to create a rental here
+        }
+      },
+    },
+  };
   </script>
   
   <style scoped>
-    .date-picker {
-      max-width: 250px;
-    }
-  
-    .total-price {
-      font-size: 1.5em;
-      font-weight: bold;
-    }
-  </style>
-  
+  .date-picker {
+    max-width: 250px;
+  }
+
+  .total-price {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+</style>
